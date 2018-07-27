@@ -47,6 +47,8 @@ MinimalImageB* readImageBW_8U(std::string filename)
 	}
 	MinimalImageB* img = new MinimalImageB(m.cols, m.rows);
 	memcpy(img->data, m.data, m.rows*m.cols);
+
+	img->filename = filename;
 	return img;
 }
 
@@ -81,7 +83,7 @@ MinimalImage<unsigned short>* readImageBW_16U(std::string filename)
 		printf("readImageBW_16U called on image that is not a 16bit grayscale image. this may segfault. \n");
 		return 0;
 	}
-	MinimalImage<unsigned short>* img = new MinimalImage<unsigned short>(m.cols, m.rows);
+	MinimalImage<unsigned short>* img = new MinimalImage<unsigned short>(m.cols, m.rows, filename);
 	memcpy(img->data, m.data, 2*m.rows*m.cols);
 	return img;
 }

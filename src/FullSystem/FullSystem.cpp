@@ -247,8 +247,11 @@ void FullSystem::printResult(std::string file)
 	boost::unique_lock<boost::mutex> lock(trackMutex);
 	boost::unique_lock<boost::mutex> crlock(shellPoseMutex);
 
-	std::ofstream myfile;
-	myfile.open (file.c_str());
+	std::ofstream myfile(file.c_str());
+	if (!myfile){
+		std::cerr << "[ERROR] Failed to open file: " << file << std::endl;
+		throw std::runtime_error("");
+	}
 	myfile << std::setprecision(15);
 
 	for(FrameShell* s : allFrameHistory)
@@ -264,6 +267,63 @@ void FullSystem::printResult(std::string file)
 			" " << s->camToWorld.so3().unit_quaternion().z()<<
 			" " << s->camToWorld.so3().unit_quaternion().w() << "\n";
 	}
+
+// save in YAML format (for debugging only)
+//	// YAML 1.0
+//	std::string output = "%YAML:1.0\n";
+//	// Save camera parameters
+//	output += "camera:\n";
+//	output += "  fx: " + std::to_string(Hcalib.fxl()) + "\n";
+//	output += "  fy: " + std::to_string(Hcalib.fyl()) + "\n";
+//	output += "  cx: " + std::to_string(Hcalib.cxl()) + "\n";
+//	output += "  cy: " + std::to_string(Hcalib.cyl()) + "\n";
+//	// because Monocular Dataset is using vignette, set distortion to 0
+//	output += "  k1: " + std::to_string(0.0) + "\n";
+//	output += "  k2: " + std::to_string(0.0) + "\n";
+//	output += "  p1: " + std::to_string(0.0) + "\n";
+//	output += "  p2: " + std::to_string(0.0) + "\n";
+//	output += "  k3: " + std::to_string(0.0) + "\n";
+//    myfile << output;
+//
+//    // save keyframe poses
+//	myfile << "keyframes:\n";
+//    for (auto kf : allKeyFramesHistory){
+//		// get rotation and translation, convert Sophus::SE3 to Eigen::Matrix4d
+//        auto cam_r = kf->camToWorld.rotationMatrix();
+//        auto cam_t = kf->camToWorld.translation();
+//        Eigen::Matrix3d rotation_mat(3,3);
+//        for (int i = 0; i < 3; i++){
+//            for (int j = 0; j < 3; j++){
+//                rotation_mat(i,j) = cam_r(i,j);
+//            }
+//        }
+//         for (int i = 0; i < 3; i ++){
+//             cam(i,3) = cam_t(i);
+//         }
+//         cam(3,3) = 1;
+//
+//        Eigen::Quaterniond q(rotation_mat);
+//        Eigen::Vector3d t(cam_t);
+//
+//        output = "";
+//        output += "  - id: " + std::to_string(kf->id) + "\n";
+//        output += "    filename: \"" + kf->filename + "\"\n";
+//        output += "    pose:\n";
+//        output += "      - " + std::to_string(q.w()) + "\n";
+//        output += "      - " + std::to_string(q.x()) + "\n";
+//        output += "      - " + std::to_string(q.y()) + "\n";
+//        output += "      - " + std::to_string(q.z()) + "\n";
+//        output += "      - " + std::to_string(t(0)) + "\n";
+//        output += "      - " + std::to_string(t(1)) + "\n";
+//        output += "      - " + std::to_string(t(2)) + "\n";
+//        myfile << output;
+//    }
+//
+//    // save all the pointclouds
+//    for (auto kf : allKeyFramesHistory){
+//
+//    }
+
 	myfile.close();
 }
 
@@ -814,6 +874,7 @@ void FullSystem::addActiveFrame( ImageAndExposure* image, int id )
     shell->marginalizedAt = shell->id = allFrameHistory.size();
     shell->timestamp = image->timestamp;
     shell->incoming_id = id;
+	shell->filename = image->filename;
 	fh->shell = shell;
 	allFrameHistory.push_back(shell);
 

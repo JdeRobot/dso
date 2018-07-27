@@ -1,0 +1,1 @@
+./build/bin/dso_dataset files=~/SLAM/datasets/sequence_43/images.zip calib=~/SLAM/datasets/sequence_43/camera.txt gamma=~/SLAM/datasets/sequence_43/pcalib.txt vignette=~/SLAM/datasets/sequence_43/vignette.png preset=0 mode=0

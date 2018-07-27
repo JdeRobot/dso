@@ -70,6 +70,8 @@ PointFrameResidual::PointFrameResidual(PointHessian* point_, FrameHessian* host_
 	assert(((long)J)%16==0);
 
 	isNew=true;
+
+    target_frame_id = 0;
 }
 
 
@@ -188,6 +190,8 @@ double PointFrameResidual::linearize(CalibHessian* HCalib)
 
 		projectedTo[idx][0] = Ku;
 		projectedTo[idx][1] = Kv;
+
+        target_frame_id = target->shell->id;
 
 
         Vec3f hitColor = (getInterpolatedElement33(dIl, Ku, Kv, wG[0]));

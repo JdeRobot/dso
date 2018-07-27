@@ -58,7 +58,7 @@ PhotometricUndistorter::PhotometricUndistorter(
 	vignetteMapInv=0;
 	w = w_;
 	h = h_;
-	output = new ImageAndExposure(w,h);
+	output = new ImageAndExposure(w,h,file);
 	if(file=="" || vignetteImage=="")
 	{
 		printf("NO PHOTOMETRIC Calibration!\n");
@@ -391,8 +391,12 @@ ImageAndExposure* Undistort::undistort(const MinimalImage<T>* image_raw, float e
 		exit(1);
 	}
 
+    if (image_raw->filename.size() == 0){
+        throw std::runtime_error("The filename is empty");
+    }
+
 	photometricUndist->processFrame<T>(image_raw->data, exposure, factor);
-	ImageAndExposure* result = new ImageAndExposure(w, h, timestamp);
+	ImageAndExposure* result = new ImageAndExposure(w, h, image_raw->filename ,timestamp);
 	photometricUndist->output->copyMetaTo(*result);
 
 	if (!passthrough)

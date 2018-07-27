@@ -289,10 +289,11 @@ void PangolinDSOViewer::run()
 	}
 
 
+    // DO NOT exit the whole process, IOWrappper need to save pointcloud
 	printf("QUIT Pangolin thread!\n");
-	printf("I'll just kill the whole process.\nSo Long, and Thanks for All the Fish!\n");
-
-	exit(1);
+//	printf("I'll just kill the whole process.\nSo Long, and Thanks for All the Fish!\n");
+//
+//	exit(1);
 }
 
 

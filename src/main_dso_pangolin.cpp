@@ -49,6 +49,7 @@
 
 #include "IOWrapper/Pangolin/PangolinDSOViewer.h"
 #include "IOWrapper/OutputWrapper/SampleOutputWrapper.h"
+#include "IOWrapper/io/JdeRobotOutputIO.h"
 
 
 std::string vignette = "";
@@ -353,6 +354,11 @@ void parseArgument(char* arg)
 
 int main( int argc, char** argv )
 {
+//	for(int idx=0;idx<patternNum;idx++){
+//		std::cerr << "patternP[" << idx << "][0]: " << patternP[idx][0] << std::endl;
+//        std::cerr << "patternP[" << idx << "][1]: " << patternP[idx][1] << std::endl;
+//	}
+
 	//setlocale(LC_ALL, "");
 	for(int i=1; i<argc;i++)
 		parseArgument(argv[i]);
@@ -397,7 +403,8 @@ int main( int argc, char** argv )
 
 
 
-
+	// for recording
+	fullSystem->outputWrapper.push_back(new IOWrap::JdeRobotOutputIO());
 
 
     IOWrap::PangolinDSOViewer* viewer = 0;
@@ -531,7 +538,7 @@ int main( int argc, char** argv )
         gettimeofday(&tv_end, NULL);
 
 
-        fullSystem->printResult("result.txt");
+        // fullSystem->printResult("result.yaml");
 
 
         int numFramesProcessed = abs(idsToPlay[0]-idsToPlay.back());
@@ -568,6 +575,7 @@ int main( int argc, char** argv )
         viewer->run();
 
     runthread.join();
+    std::cerr << "----------------------Viewer Completed-----------------" << std::endl;
 
 	for(IOWrap::Output3DWrapper* ow : fullSystem->outputWrapper)
 	{

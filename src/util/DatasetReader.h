@@ -271,7 +271,10 @@ private:
 				}
 			}
 
-			return IOWrap::readStreamBW_8U(databuffer, readbytes);
+			// set filename
+			auto img = IOWrap::readStreamBW_8U(databuffer, readbytes);
+			img->filename = files[id];
+			return img;
 #else
 			printf("ERROR: cannot read .zip archive, as compile without ziplib!\n");
 			exit(1);

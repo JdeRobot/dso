@@ -1,7 +1,22 @@
 # DSO: Direct Sparse Odometry
-
 For more information see
 [https://vision.in.tum.de/dso](https://vision.in.tum.de/dso)
+
+### 0. Update made by this fork
+This forked update is for saving the result with YAML file. Following results are saved to "result.yaml"
+- Camera intrinsic
+- Keyframe poses (with their corresponding filenames)
+- Pointcloud (with observations on keyframes for each point)
+
+This update changes several program behaviors
+* display: 
+	- Only display marginalized points in the viewer. It is sufficient as each valid point will be marginalized exactly once.
+	- Closing the viewer will not stop the mapping automatically.
+* result: 
+	- the result will no longer by saved to result.txt, instead it will be saved to "result.yaml" using the YAML format. 
+	- You may visualize "result.yaml" with [slam-viewer](https://github.com/JdeRobot/slam-viewer.git)
+* source code:
+	- several related files are modified to get keyframe filenames and point observations
 
 ### 1. Related Papers
 * **Direct Sparse Odometry**, *J. Engel, V. Koltun, D. Cremers*, In arXiv:1607.02565, 2016

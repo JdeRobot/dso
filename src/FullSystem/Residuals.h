@@ -74,6 +74,7 @@ public:
 	PointHessian* point;
 	FrameHessian* host;
 	FrameHessian* target;
+	int target_frame_id;
 	RawResidualJacobian* J;
 
 

@@ -38,11 +38,12 @@ public:
 	int w;
 	int h;
 	T* data;
+	std::string filename;
 
 	/*
 	 * creates minimal image with own memory
 	 */
-	inline MinimalImage(int w_, int h_) : w(w_), h(h_)
+	inline MinimalImage(int w_, int h_, std::string filename_ = "") : w(w_), h(h_), filename(filename_)
 	{
 		data = new T[w*h];
 		ownData=true;
@@ -64,7 +65,7 @@ public:
 
 	inline MinimalImage* getClone()
 	{
-		MinimalImage* clone = new MinimalImage(w,h);
+		MinimalImage* clone = new MinimalImage(w,h, filename);
 		memcpy(clone->data, data, sizeof(T)*w*h);
 		return clone;
 	}

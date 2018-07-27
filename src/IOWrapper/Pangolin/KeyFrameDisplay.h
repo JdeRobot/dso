@@ -27,10 +27,16 @@
 #undef Success
 #include <Eigen/Core>
 #include "util/NumType.h"
+#include "IOWrapper/common/Observation.h"
 #include <pangolin/pangolin.h>
 
 #include <sstream>
 #include <fstream>
+
+//#include <pcl/point_cloud.h>
+//#include <pcl/point_types.h>
+//#include <pcl/io/pcd_io.h>
+//#include <pcl/common/transforms.h>
 
 namespace dso
 {
@@ -44,6 +50,11 @@ namespace IOWrap
 template<int ppp>
 struct InputPointSparse
 {
+// public:
+
+//    InputPointSparse<ppp>();
+//    ~InputPointSparse();
+
 	float u;
 	float v;
 	float idpeth;
@@ -52,6 +63,8 @@ struct InputPointSparse
 	int numGoodRes;
 	unsigned char color[ppp];
 	unsigned char status;
+
+    std::vector<Observation> * observations;
 };
 
 struct MyVertex
@@ -84,9 +97,17 @@ public:
 	void drawCam(float lineWidth = 1, float* color = 0, float sizeFactor=1);
 	void drawPC(float pointSize);
 
+	// print all the points in the current frames in the YAML Format
+	// retrun the number of points printed
+	int printPoints(int starting_index, std::ofstream& myfile);
+
+//    pcl::PointCloud<pcl::PointXYZ> getPC();
+
 	int id;
 	bool active;
 	SE3 camToWorld;
+
+    std::string filename;
 
     inline bool operator < (const KeyFrameDisplay& other) const
     {
@@ -95,6 +116,9 @@ public:
 
 
 private:
+    void addObservation(struct InputPointSparse<MAX_RES_PER_POINT> * pt, const Observation& ob);
+
+
 	float fx,fy,cx,cy;
 	float fxi,fyi,cxi,cyi;
 	int width, height;
